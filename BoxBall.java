@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.geom.*;
 
+
 /**
  * Class BoxBall - a graphical ball that moves similar to the ball in PONG.
  * It bounces around the confines of a box as defined by the Box class.
@@ -14,12 +15,10 @@ import java.awt.geom.*;
  *
  * This movement can be initiated by repeated calls to the "move" method.
  * 
- * @author Michael Kölling (mik)
- * @author David J. Barnes
- * @author Bruce Quig
+ * @author Michael Patterson
  * @author William Crosbie
  *
- * @version 2025.10.06
+ * @version 10/27/25
  */
 
 public class BoxBall
@@ -52,8 +51,13 @@ public class BoxBall
         yPosition = yPos;
         color = ballColor;
         diameter = ballDiameter;
-
+        
+        myBox = box;
         canvas = drawingCanvas;
+        
+        java.util.Random rng = new java.util.Random();
+        do {xSpeed = rng.nextInt(15) - 7;} while (xSpeed ==0);
+        do {ySpeed = rng.nextInt(15) - 7;} while (ySpeed ==0);
     }
 
     /**
@@ -78,14 +82,40 @@ public class BoxBall
      **/
     public void move()
     {
-        // remove from canvas at the current position
-        erase();
-            
-        // compute new position
-  
-        // figure out if it has hit the left or right wall
+        int nextY = yPosition + ySpeed;
+        int nextX = xPosition + xSpeed;
+        int right = myBox.getRightWall();
+        int left = myBox.getLeftWall();
+        int bottom = myBox.getBottomWall();
+        int top = myBox.getTopWall();
+        int minX = left;
+        int minY = top;
+        int maxX = right -diameter;
+        int maxY = bottom - diameter;
         
-        // figure out if it has hit the top or bottom wall
+        if (nextY < minY) {
+            nextY = minY +(minY - nextY);
+            ySpeed =-ySpeed;
+        }
+        else if(nextY> maxY) {
+            nextY = maxY -(nextY - maxY);
+            ySpeed =- ySpeed;
+        }
+        
+        
+        if(nextX<minX){
+            nextX= minX+(minX - nextX);
+            xSpeed =-xSpeed;
+        }
+        else if(nextX> maxX){
+            nextX = maxX-(nextX - maxX);
+            xSpeed =-xSpeed;
+        }
+  
+        
+        erase();
+        xPosition = nextX;
+        yPosition = nextY;
         
         draw();
     }    
